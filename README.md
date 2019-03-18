@@ -26,15 +26,13 @@ CLI tool for bulk downloads of NeuroVault data.
 Installation
 ------------
 
-```
-pip install git+https://github.com/NeuroVault/neurovault_collection_downloader.git
-```
+`pip install git+https://github.com/NeuroVault/neurovault_collection_downloader.git`
 
 Usage
 -----
 
 1. Create a text file with one collection ID (a number or string of capital letters in case of private collection) per line.
-2. `neurovault_collection_downloader collections.txt /output_directory
+2. `neurovault_collection_downloader collections.txt /output_directory`
 
 Credits
 -------
