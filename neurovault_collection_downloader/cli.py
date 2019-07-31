@@ -15,7 +15,8 @@ def mkdir_p(path):
             pass
         else: raise
 
-def fetch_collection(col_id, destination_folder, alt_label=None):
+def fetch_collection(col_id, destination_folder, 
+                     alt_label=None, exclude_tag=None):
     images_url_template = "http://neurovault.org/api/collections/%s/images/"
     next_url = images_url_template%col_id
     images = []
@@ -37,6 +38,9 @@ def fetch_collection(col_id, destination_folder, alt_label=None):
     for image in images:
         click.echo("fetching %s"%image['file'])
         fname = os.path.basename(image['file'])
+        if exclude_tag is not None:
+            if fname.find(exclude_tag)>-1:
+                continue
         print("saving",image['file'],"to",os.path.join(col_folder, fname))
         urllib.request.urlretrieve(image['file'], os.path.join(col_folder, fname))
 
