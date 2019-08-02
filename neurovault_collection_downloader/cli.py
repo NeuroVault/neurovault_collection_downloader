@@ -17,6 +17,9 @@ def mkdir_p(path):
 
 def fetch_collection(col_id, destination_folder, 
                      alt_label=None, exclude_tag=None):
+    if exclude_tag is not None:
+        if not isinstance(exclude_tag, list):
+            exclude_tag = [exclude_tag]
     images_url_template = "http://neurovault.org/api/collections/%s/images/"
     next_url = images_url_template%col_id
     images = []
@@ -33,16 +36,24 @@ def fetch_collection(col_id, destination_folder,
         col_folder = os.path.join(destination_folder, "%s"%col_id)
 
     mkdir_p(col_folder)
-    json.dump(images, open(os.path.join(col_folder, "images.json"), "w"), 
+    json.dump(images, 
+              open(os.path.join(col_folder, "images.json"), "w"), 
               indent=4, sort_keys=True)
     for image in images:
         click.echo("fetching %s"%image['file'])
         fname = os.path.basename(image['file'])
+        exclude_img = False
         if exclude_tag is not None:
-            if fname.find(exclude_tag)>-1:
-                continue
-        print("saving",image['file'],"to",os.path.join(col_folder, fname))
-        urllib.request.urlretrieve(image['file'], os.path.join(col_folder, fname))
+            for et in exclude_tag:
+                if fname.find(et)>-1:
+                    exclude_img = True
+        if not exclude_img:
+            print("saving",
+                  image['file'],"to",
+                  os.path.join(col_folder, fname))
+            urllib.request.urlretrieve(
+                image['file'], 
+                os.path.join(col_folder, fname))
 
 
 @click.command()
